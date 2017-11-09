@@ -39,7 +39,6 @@ trait ServiceProviders {
 
 		foreach ($providers as $provider) {
 			$providerInstance = new $provider();
-			/* @var $providerInstance ServiceProvider */
 			yield $providerInstance;
 		}
 	}
@@ -52,7 +51,7 @@ trait ServiceProviders {
 		$container = $this->getContainer();
 
 		foreach ($this->getProviders() as $provider) {
-			$provider->register($container);
+			$provider->register($this, $container);
 		}
 	}
 
@@ -64,7 +63,7 @@ trait ServiceProviders {
 		$container = $this->getContainer();
 
 		foreach ($this->getProviders() as $provider) {
-			$provider->boot($container);
+			$provider->boot($this, $container);
 		}
 	}
 

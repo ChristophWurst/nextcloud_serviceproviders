@@ -22,18 +22,30 @@
 
 namespace ChristophWurst\Nextcloud\ServiceProviders;
 
+use OCP\AppFramework\App;
 use OCP\AppFramework\IAppContainer;
 
 abstract class ServiceProvider {
 
-	protected $providers = [];
-
-	public function register(IAppContainer $container) {
-		
+	/**
+	 * Overwrite this method to register your application's service
+	 * provider
+	 *
+	 * @param App $app
+	 * @param IAppContainer $container
+	 */
+	public function register(App $app, IAppContainer $container) {
+		// empty by default
 	}
 
-	public function boot(IAppContainer $container) {
-		
+	/**
+	 * This method is called when the application starts
+	 *
+	 * @param App $app
+	 * @param IAppContainer $container
+	 */
+	public function boot(App $app, IAppContainer $container) {
+		// empty by default
 	}
 
 }
