@@ -22,19 +22,49 @@
 
 namespace ChristophWurst\Nextcloud\ServiceProviders;
 
+use Generator;
 use OCP\AppFramework\IAppContainer;
 
 trait ServiceProviders {
 
-	protected function registerServiceProviders() {
-		/* @var $container IAppContainer */
-		$container = $this->getContainer();
-		$providers = $this->providers;
+	/**
+	 * @return Generator|ServiceProvider[]
+	 */
+	private function getProviders() {
+		if (property_exists($this, 'providers')) {
+			$providers = $this->providers;
+		} else {
+			$providers = [];
+		}
 
 		foreach ($providers as $provider) {
 			$providerInstance = new $provider();
-			/* @var $provider ServiceProvider */
-			$providerInstance->register($container);
+			/* @var $providerInstance ServiceProvider */
+			yield $providerInstance;
+		}
+	}
+
+	/**
+	 * Call 'register' an all registered providers
+	 */
+	protected function registerServiceProviders() {
+		/* @var $container IAppContainer */
+		$container = $this->getContainer();
+
+		foreach ($this->getProviders() as $provider) {
+			$provider->register($container);
+		}
+	}
+
+	/**
+	 * Call 'boot' on all registered providers
+	 */
+	protected function bootServiceProviders() {
+		/* @var $container IAppContainer */
+		$container = $this->getContainer();
+
+		foreach ($this->getProviders() as $provider) {
+			$provider->boot($container);
 		}
 	}
 
